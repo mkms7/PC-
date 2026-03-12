@@ -117,22 +117,24 @@
 
 <script>
    const SECRET_PW = "0132";
+function checkPassword() {
+   
+    let input = document.getElementById('pw-input').value; 
+    
 
-    function checkPassword() {
-        let input = document.getElementById('pass-input').value;
-        
-        input = input.replace(/[０-９]/g, function(s) {
-            return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
-        });
-        
-        input = input.trim();
+    input = input.replace(/[０-９]/g, function(s) {
+        return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+    });
+    
+    input = input.trim();
 
-        if (input === SECRET_PW) {
-            showScreen('main-screen');
-        } else {
-            alert("パスワードが違います。");
-        }
+    if (input === SECRET_PW) {
+        showScreen('main-screen');
+    } else {
+        alert("パスワードが違います。");
     }
+}
+   
     
     function showScreen(id) {
     
@@ -1748,5 +1750,6 @@
 </script>
 </body>
 </html>
+
 
 
