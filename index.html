@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>開発段階 - PC専門家養成ツール300</title>
+    <title>開発段階</title>
     <style>
         :root { --bg-color: #1a1a1a; --text-color: #e0e0e0; --accent-color: #4da6ff; --card-bg: rgba(255, 255, 255, 0.1); }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: sans-serif; background-color: var(--bg-color); color: var(--text-color); overflow: hidden; user-select: none; transition: 0.3s; }
-        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Helvetica Neue', Arial, sans-serif; background-color: var(--bg-color); color: var(--text-color); overflow: hidden; user-select: none; transition: background-color 0.3s; }
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
         .click-bubble { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.4); pointer-events: none; z-index: 9999; animation: bubble-up 0.8s ease-out forwards; }
         @keyframes bubble-up { 0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0.8; } 100% { transform: translate(-50%, -150%) scale(1.5); opacity: 0; } }
         .screen { display: none; position: absolute; width: 100%; height: 100%; padding: 70px 20px 20px 20px; box-sizing: border-box; overflow-y: auto; }
@@ -15,24 +15,27 @@
         .top-back-btn { position: fixed; top: 15px; left: 15px; padding: 8px 15px; background: rgba(0,0,0,0.4); border: 1px solid var(--accent-color); border-radius: 5px; cursor: pointer; z-index: 1000; font-size: 14px; }
         .settings-icon { position: fixed; top: 15px; right: 15px; font-size: 24px; cursor: pointer; z-index: 100; }
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 500px; margin-top: 20px; }
-        .main-btn { background: var(--card-bg); border: 2px solid var(--accent-color); padding: 25px 10px; border-radius: 15px; text-align: center; cursor: pointer; font-weight: bold; backdrop-filter: blur(5px); }
+        .main-btn { background: var(--card-bg); border: 2px solid var(--accent-color); padding: 25px 10px; border-radius: 15px; text-align: center; cursor: pointer; font-weight: bold; font-size: 1rem; backdrop-filter: blur(5px); transition: 0.2s; }
+        .main-btn:active { transform: scale(0.95); background: var(--accent-color); color: #000; }
         .content-card { background: var(--card-bg); width: 100%; max-width: 600px; padding: 20px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid var(--accent-color); }
-        .choice-btn { width: 100%; padding: 18px; margin: 10px 0; background: var(--card-bg); border: 1px solid var(--accent-color); border-radius: 10px; text-align: left; cursor: pointer; }
+        .choice-btn { width: 100%; padding: 18px; margin: 10px 0; background: var(--card-bg); border: 1px solid var(--accent-color); border-radius: 10px; text-align: left; cursor: pointer; font-size: 1rem; }
         .setting-item { width: 100%; max-width: 400px; display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        select { background: #333; color: white; padding: 8px; border-radius: 5px; }
+        select { background: #333; color: white; padding: 8px; border-radius: 5px; border: none; }
         #lock-screen { background-color: #1a1a1a !important; justify-content: center; padding-top: 0; }
+        input[type="password"] { background: #333; color: #fff; border: 1px solid var(--accent-color); padding: 10px; border-radius: 5px; text-align: center; font-size: 1.2rem; width: 150px; }
     </style>
 </head>
 <body onclick="spawnBubble(event)">
+
 <canvas id="bg-canvas"></canvas>
 <div id="back-btn-container"></div>
 
 <div id="lock-screen" class="screen active">
     <div style="text-align: center;">
-        <h1>開発段階 - PC300</h1>
+        <h1 style="font-size: 1.5rem; margin-bottom: 30px;">開発段階</h1>
         <input type="password" id="pass-input" placeholder="0132">
         <div class="main-btn" style="max-width: 150px; margin: 20px auto; padding: 15px;" onclick="checkPassword()">認証</div>
-        <div id="error-msg" style="color: #ff4d4d;"></div>
+        <div id="error-msg" style="color: #ff4d4d; height: 20px;"></div>
     </div>
 </div>
 
@@ -41,77 +44,86 @@
     <h2 style="margin-top: 20px;">メインメニュー</h2>
     <div class="menu-grid">
         <div class="main-btn" onclick="showScreen('learn-menu-screen')">知識習得</div>
-        <div class="main-btn" onclick="showScreen('test-menu-screen')">専門家テスト</div>
+        <div class="main-btn" onclick="showScreen('test-menu-screen')">確認テスト</div>
     </div>
 </div>
 
 <div id="learn-menu-screen" class="screen">
-    <h2>学習カテゴリ選択</h2>
+    <h2>自己育成モード</h2>
     <div class="menu-grid">
         <div class="main-btn" onclick="showLearn('soft')">ソフト</div>
         <div class="main-btn" onclick="showLearn('hard')">ハード</div>
-        <div class="main-btn" onclick="showLearn('struct')">構造</div>
+        <div class="main-btn" onclick="showLearn('struct')">内部構造</div>
         <div class="main-btn" onclick="showLearn('maker')">メーカー</div>
     </div>
 </div>
 
 <div id="learn-content-screen" class="screen">
-    <h2 id="learn-title"></h2>
+    <h2 id="learn-title">学習内容</h2>
     <div id="learn-body" style="width: 100%; max-width: 600px;"></div>
 </div>
 
 <div id="test-menu-screen" class="screen">
-    <h2>難易度別テスト</h2>
+    <h2>確認テスト</h2>
+    <p>全300問以上からランダムで10問出題されます</p>
     <div class="menu-grid" style="grid-template-columns: 1fr;">
-        <div class="main-btn" onclick="startTest('初歩')">初歩 (販売・接客)</div>
-        <div class="main-btn" onclick="startTest('基礎')">基礎 (スペック判断)</div>
-        <div class="main-btn" onclick="startTest('標準')">標準 (プロ向け)</div>
+        <div class="main-btn" onclick="startTest('初歩')">初歩レベル</div>
+        <div class="main-btn" onclick="startTest('基礎')">基礎レベル</div>
+        <div class="main-btn" onclick="startTest('標準')">標準レベル</div>
     </div>
 </div>
 
 <div id="test-run-screen" class="screen">
-    <div id="test-progress" style="font-size: 1.5rem; color: var(--accent-color);">1 / 10</div>
+    <div id="test-progress" style="font-size: 1.5rem; color: var(--accent-color); margin-bottom: 10px;">1 / 10</div>
     <div style="width:100%; max-width:600px;">
-        <h3 id="question-text"></h3>
+        <h3 id="question-text" style="min-height: 60px; line-height: 1.4;"></h3>
         <div id="choices-area"></div>
     </div>
 </div>
 
 <div id="result-screen" class="screen">
     <h2>診断結果</h2>
-    <div id="result-score" style="font-size:3rem; margin: 20px 0;"></div>
+    <div id="result-score" style="font-size:3rem; margin: 20px 0; color: var(--accent-color);"></div>
     <div id="result-details" style="width:100%; max-width:600px; text-align: left;"></div>
-    <div class="main-btn" style="max-width: 200px;" onclick="showScreen('home-screen')">終了</div>
+    <div class="main-btn" style="max-width: 200px; margin-top: 20px;" onclick="showScreen('home-screen')">ホームへ戻る</div>
 </div>
 
 <div id="settings-screen" class="screen">
     <h2>システム設定</h2>
-    <div class="setting-item"><span>カラー</span>
+    <div class="setting-item"><span>背景カラー</span>
         <select id="bg-select" onchange="updateSettings()">
-            <option value="#1a1a1a">ダーク</option><option value="#001f3f">青</option>
-            <option value="#00331a">緑</option><option value="#2d3300">黄緑</option>
-            <option value="#33001a">サクラ</option><option value="#003133">ミント</option>
-            <option value="#1a0033">紫</option><option value="#332d00">ゴールド</option>
+            <option value="#1a1a1a">ダーク</option><option value="#001f3f">ディープブルー</option>
+            <option value="#00331a">フォレスト</option><option value="#33001a">サクラ</option>
+            <option value="#003133">ミント</option><option value="#331a00">サンセット</option>
+            <option value="#1a0033">バイオレット</option><option value="#222222">モノトーン</option>
+            <option value="#332d00">ゴールド</option><option value="#002233">スカイ</option>
         </select>
     </div>
-    <div class="setting-item"><span>泡演出</span>
+    <div class="setting-item"><span>泡エフェクト</span>
         <select id="mode-select" onchange="updateSettings()">
-            <option value="normal">あり</option><option value="perf">なし</option>
+            <option value="normal">ON</option><option value="perf">OFF</option>
         </select>
     </div>
     <div class="setting-item"><span>詳細解説</span>
         <select id="guide-select" onchange="updateSettings()">
-            <option value="on">あり</option><option value="off">なし</option>
+            <option value="on">表示</option><option value="off">非表示</option>
         </select>
     </div>
 </div>
 
 <script>
     let screenHistory = ['lock-screen'];
-    let currentQuiz = [];
+    let currentQuizSet = [];
     let quizIndex = 0;
     let score = 0;
     let wrongAnswers = [];
+
+    // ★ここに巨大な問題データを貼り付けます（次のメッセージでお送りします）
+    const ALL_QUIZ_DATA = {
+        '初歩': [],
+        '基礎': [],
+        '標準': []
+    };
 
     function spawnBubble(e) {
         if(localStorage.getItem('mode') === 'perf') return;
@@ -120,56 +132,26 @@
             b.className = 'click-bubble';
             const size = Math.random() * 20 + 10;
             b.style.width = size + 'px'; b.style.height = size + 'px';
-            b.style.left = (e.clientX + (Math.random()-0.5)*30) + 'px';
-            b.style.top = (e.clientY + (Math.random()-0.5)*30) + 'px';
+            b.style.left = (e.clientX + (Math.random()-0.5)*40) + 'px';
+            b.style.top = (e.clientY + (Math.random()-0.5)*40) + 'px';
             document.body.appendChild(b);
             setTimeout(() => b.remove(), 800);
         }
     }
 
+    // 学習用データ
     const learnData = {
-        soft: { title: "ソフト・OS", items: [
-            { h: "Windows", p: "世界シェア1位のOS。多くのアプリが動く『標準的な厨房ルール』。"},
-            { h: "macOS", p: "Apple専用OS。デザインや動画編集に強い『高級レストランの厨房』。"},
-            { h: "SaaS", p: "ネット経由で使うソフト。自分でレシピを持たず、出前を取る感覚。"}
-        ]},
-        hard: { title: "周辺機器", items: [
-            { h: "マウス", p: "手の代わり。トラックボールは『指先だけで具材を回す』職人道具。"},
-            { h: "モニター", p: "4Kは『超高精細なまな板』。細かい盛り付け（デザイン）に必須。"}
-        ]},
-        struct: { title: "内部構造", items: [
-            { h: "NPU", p: "AI専用の調理補助。特定の料理（AI画像生成など）だけ超速い。"},
-            { h: "電源ユニット", p: "厨房の電気を管理。80PLUSは『電気を無駄にしない』省エネ指標。"}
-        ]},
+        soft: { title: "ソフト・OS", items: [{ h: "Windows", p: "世界標準のOS。和食・洋食どちらも作れる万能な厨房。"}, { h: "macOS", p: "デザイン特化。美しい盛り付けに最適な高級厨房。"}]},
+        hard: { title: "ハードウェア", items: [{ h: "モニター", p: "4Kは超微細なまな板。"}, { h: "キーボード", p: "手に馴染む包丁。"}]},
+        struct: { title: "内部構造", items: [{ h: "CPU", p: "メインシェフ。"}, { h: "NPU", p: "AI料理専門の副料理長。"}]},
         maker: { title: "メーカー比較", items: [
-            { h: "VAIO", p: "放熱の鬼。シェフがバテないよう、超強力な換気扇を積んでいる。"},
-            { h: "富士通", p: "軽さの極致。毎日持ち運ぶシェフのために、包丁1本分まで削る。"},
-            { h: "Let's note", p: "頑丈さの象徴。戦場のような厨房でも壊れない。"}
+            { h: "VAIO", p: "安曇野の職人魂。冷却性能が抜群。"}, 
+            { h: "Fujitsu", p: "世界最軽量のUHシリーズが武器。"},
+            { h: "Lenovo/DELL", p: "圧倒的な物量とコスパ。世界中のパーツが集まる。"},
+            { h: "Dynabook", p: "旧東芝の技術。ノートPCの生みの親。"},
+            { h: "NEC", p: "国内シェア高く、サポートが非常に丁寧。"}
         ]}
     };
-
-    const quizData = {
-        '初歩': [
-            { q: "マウスの右クリックの役割は？", a: ["決定", "メニュー表示", "削除"], ok: 1, exp: "次の動作（隠し味）を選ぶためのボタンだよ。" },
-            { q: "4Kモニターの4Kとは？", a: ["値段", "画面の細かさ", "重さ"], ok: 1, exp: "まな板の表面がどれだけ滑らかか、ということだね。" },
-            { q: "VAIOの強みは？", a: ["世界最安", "放熱と堅牢性", "画面が丸い"], ok: 1, exp: "シェフが熱くならないように冷やすのが得意なんだ。" }
-        ],
-        '基礎': [
-            { q: "CPUの『スレッド数』とは？", a: ["シェフの腕の数", "包丁の重さ", "火力の強さ"], ok: 0, exp: "腕が多いほど、同時にたくさんの皿を調理できるよ。" },
-            { q: "富士通UHシリーズの最大の特徴は？", a: ["値段が高い", "圧倒的な軽さ", "防水機能"], ok: 1, exp: "羽根のように軽いから、どこでも厨房が開けるんだ。" },
-            { q: "SSDのNVMe接続は何が速い？", a: ["起動だけ", "読み書き全般", "ネット速度"], ok: 1, exp: "冷蔵庫の扉が自動で開くくらい、取り出しが速いよ。" }
-        ],
-        '標準': [
-            { q: "NPU（AIプロセッサ）を積む利点は？", a: ["文字が速く打てる", "AI処理の電力効率向上", "音が良くなる"], ok: 1, exp: "AI専用の時短調理器。シェフ（CPU）が楽をできるんだ。" },
-            { q: "TDP(W)が高いPCで注意すべきは？", a: ["通信速度", "冷却と電源容量", "マウスの感度"], ok: 1, exp: "火力が強すぎるから、強力な換気扇とガス代（電気）が必要だよ。" },
-            { q: "ASUSの『ROG』シリーズはどんな人向け？", a: ["事務作業", "ゲーム・高負荷作業", "子供向け"], ok: 1, exp: "最高の火力とスピードを求める、プロの料理人（ゲーマー）向けだね。" }
-        ]
-    };
-
-    // 実際にはここに300問分のデータを配列として持たせる
-    for(let i=0; i<100; i++) {
-        quizData['標準'].push({ q: `【専門家問題 ${i+1}】メーカー比較：ビジネス現場でDELLが選ばれる理由は？`, a: ["デザイン", "保守体制とコスパ", "キーボードが光る"], ok: 1, exp: "故障した時にすぐ直しに来てくれる、巨大なサポート網があるからだよ。" });
-    }
 
     function showLearn(cat) {
         const data = learnData[cat];
@@ -188,16 +170,19 @@
     }
 
     function startTest(type) {
-        currentQuiz = quizData[type].sort(() => Math.random() - 0.5).slice(0, 10);
+        const fullList = ALL_QUIZ_DATA[type];
+        if(!fullList || fullList.length === 0) { alert("問題データを準備中です。"); return; }
+        // 300問の中からランダムに10問抽出
+        currentQuizSet = fullList.sort(() => Math.random() - 0.5).slice(0, 10);
         quizIndex = 0; score = 0; wrongAnswers = [];
         showScreen('test-run-screen');
         nextQuestion();
     }
 
     function nextQuestion() {
-        if (quizIndex >= currentQuiz.length) { finishTest(); return; }
-        document.getElementById('test-progress').innerText = `${quizIndex + 1} / ${currentQuiz.length}`;
-        const q = currentQuiz[quizIndex];
+        if (quizIndex >= currentQuizSet.length) { finishTest(); return; }
+        document.getElementById('test-progress').innerText = `${quizIndex + 1} / ${currentQuizSet.length}`;
+        const q = currentQuizSet[quizIndex];
         document.getElementById('question-text').innerText = q.q;
         const area = document.getElementById('choices-area');
         area.innerHTML = '';
@@ -215,11 +200,13 @@
 
     function finishTest() {
         showScreen('result-screen');
-        document.getElementById('result-score').innerText = `${score * 10}点`;
+        const finalScore = score * 10;
+        document.getElementById('result-score').innerText = `${finalScore}点`;
         const details = document.getElementById('result-details');
-        details.innerHTML = wrongAnswers.length > 0 ? '<h3>要復習ポイント</h3>' : '<h3>完璧な専門家です！</h3>';
+        details.innerHTML = '<h3>間違えたところの解説</h3>';
+        if(wrongAnswers.length === 0) details.innerHTML = '<h3>全問正解！プロの専門家です！</h3>';
         wrongAnswers.forEach(w => {
-            details.innerHTML += `<div class="content-card"><strong>${w.q}</strong><br>正解: ${w.ok}<br><small>${localStorage.getItem('guide')==='on'?w.exp:''}</small></div>`;
+            details.innerHTML += `<div class="content-card"><strong>問: ${w.q}</strong><br>正解: ${w.ok}<br><span style="color:#ffcc00; font-size:0.85rem;">解説: ${localStorage.getItem('guide')==='on'?w.exp:'表示オフ'}</span></div>`;
         });
     }
 
@@ -234,7 +221,7 @@
         const bg = localStorage.getItem('bgColor') || '#1a1a1a';
         document.body.style.backgroundColor = bg;
         document.querySelectorAll('.screen').forEach(s => { if(s.id !== 'lock-screen') s.style.backgroundColor = bg; });
-        if(bg === '#2d3300' || bg === '#332d00') document.documentElement.style.setProperty('--accent-color', '#d4ff00');
+        if(bg === '#332d00' || bg === '#33001a') document.documentElement.style.setProperty('--accent-color', '#ffcc00');
         else document.documentElement.style.setProperty('--accent-color', '#4da6ff');
     }
 
@@ -261,16 +248,16 @@
 
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
-    let bubbles = [];
+    let bgBubbles = [];
     function init() { 
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        bubbles = [];
-        for(let i=0; i<15; i++) bubbles.push({ x: Math.random()*canvas.width, y: canvas.height+Math.random()*100, r: Math.random()*15+5, s: Math.random()*0.5+0.2, o: Math.random()*0.2 });
+        bgBubbles = [];
+        for(let i=0; i<15; i++) bgBubbles.push({ x: Math.random()*canvas.width, y: canvas.height+Math.random()*100, r: Math.random()*15+5, s: Math.random()*0.5+0.2, o: Math.random()*0.2 });
     }
     function draw() {
         ctx.clearRect(0,0,canvas.width,canvas.height);
         if(localStorage.getItem('mode') !== 'perf') {
-            bubbles.forEach(b => { b.y -= b.s; if(b.y < -30) b.y = canvas.height+30; ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI*2); ctx.fillStyle = `rgba(255,255,255,${b.o})`; ctx.fill(); });
+            bgBubbles.forEach(b => { b.y -= b.s; if(b.y < -30) b.y = canvas.height+30; ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI*2); ctx.fillStyle = `rgba(255,255,255,${b.o})`; ctx.fill(); });
         }
         requestAnimationFrame(draw);
     }
