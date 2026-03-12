@@ -13,477 +13,285 @@
         }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
+            margin: 0; padding: 0; width: 100%; height: 100%;
             font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            overflow: hidden;
-            user-select: none;
+            background-color: var(--bg-color); color: var(--text-color);
+            overflow: hidden; user-select: none; transition: background-color 0.3s;
         }
 
-        /* 背景：泡エフェクト */
-        #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-        }
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
 
-        /* 波紋エフェクト */
-        .ripple {
-            position: absolute;
-            border: 2px solid var(--accent-color);
-            border-radius: 50%;
-            transform: scale(0);
-            animation: ripple-animation 0.6s ease-out;
-            pointer-events: none;
-            z-index: 9999;
-        }
-
-        @keyframes ripple-animation {
-            to { transform: scale(4); opacity: 0; }
-        }
-
-        /* 共通レイアウト */
         .screen {
-            display: none;
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
+            display: none; position: absolute; width: 100%; height: 100%;
+            padding: 60px 20px 20px 20px; box-sizing: border-box; overflow-y: auto;
         }
+        .active { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
 
-        .active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        /* 左上の戻るボタン */
+        .top-back-btn {
+            position: fixed; top: 15px; left: 15px;
+            padding: 8px 15px; background: rgba(0,0,0,0.4);
+            border: 1px solid var(--accent-color); border-radius: 5px;
+            cursor: pointer; z-index: 1000; font-size: 14px;
+        }
 
         /* ロック画面 */
-        #lock-screen { background-color: #1a1a1a; }
+        #lock-screen { background-color: #1a1a1a !important; padding-top: 20px; justify-content: center; }
         .input-group { text-align: center; }
         input[type="password"] {
-            padding: 15px;
-            border-radius: 8px;
-            border: none;
-            font-size: 18px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        #error-msg { color: #ff4d4d; margin-top: 10px; font-weight: bold; height: 20px; }
-
-        /* ホーム画面 */
-        .trivia-bar {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 10px 20px;
-            border-radius: 20px;
-            margin-bottom: 30px;
-            font-size: 0.9rem;
-            border: 1px solid var(--accent-color);
+            padding: 15px; border-radius: 8px; border: none;
+            font-size: 18px; margin-bottom: 20px; text-align: center;
         }
 
-        .menu-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            width: 100%;
-            max-width: 600px;
-        }
-
+        /* ホーム・メニュー */
         .main-btn {
-            background: var(--card-bg);
-            border: 2px solid var(--accent-color);
-            padding: 40px 20px;
-            border-radius: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.2s;
-            font-weight: bold;
-            font-size: 1.2rem;
-            backdrop-filter: blur(5px);
+            background: var(--card-bg); border: 2px solid var(--accent-color);
+            width: 100%; max-width: 300px; padding: 25px; margin: 10px 0;
+            border-radius: 15px; text-align: center; cursor: pointer;
+            font-weight: bold; font-size: 1.1rem; backdrop-filter: blur(5px);
         }
 
-        .main-btn:active { transform: scale(0.95); }
+        .settings-icon { position: fixed; top: 15px; right: 15px; font-size: 24px; cursor: pointer; z-index: 100; }
 
-        /* 歯車アイコン */
-        .settings-icon {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            font-size: 24px;
-            cursor: pointer;
-            z-index: 100;
-        }
-
-        /* 戻るボタン */
-        .back-btn {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            padding: 10px 20px;
-            background: rgba(0,0,0,0.5);
-            border: 1px solid var(--accent-color);
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 100;
-        }
-
-        /* 学習・メーカー画面 */
-        .nav-bar {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            width: 100%;
-            padding: 10px 0;
-            margin-bottom: 20px;
-            position: sticky;
-            top: 0;
-            background: var(--bg-color);
-            z-index: 10;
-        }
-
-        .nav-item {
-            padding: 8px 15px;
-            border-radius: 5px;
-            white-space: nowrap;
-            cursor: pointer;
-            background: var(--card-bg);
-            border: 1px solid var(--accent-color);
-        }
-
-        .content-section {
-            margin-bottom: 50px;
-            width: 100%;
-            max-width: 800px;
-            line-height: 1.6;
-        }
-
-        /* テスト画面 */
-        .test-info { font-size: 2rem; margin-bottom: 30px; }
-        .quiz-container { width: 100%; max-width: 600px; }
+        /* テスト */
+        .test-info { font-size: 2.5rem; margin-bottom: 20px; color: var(--accent-color); }
         .choice-btn {
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            background: var(--card-bg);
-            border: 1px solid var(--accent-color);
-            border-radius: 8px;
-            text-align: left;
-            cursor: pointer;
+            width: 100%; padding: 18px; margin: 10px 0;
+            background: var(--card-bg); border: 1px solid var(--accent-color);
+            border-radius: 10px; text-align: left; cursor: pointer;
         }
 
-        /* 設定リスト */
         .setting-item {
-            width: 100%;
-            max-width: 400px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            width: 100%; max-width: 400px; display: flex;
+            justify-content: space-between; align-items: center;
+            padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-
-        select, button {
-            background: #333;
-            color: white;
-            border: 1px solid #555;
-            padding: 5px;
-        }
+        select { background: #333; color: white; padding: 8px; border-radius: 5px; }
     </style>
 </head>
 <body>
 
 <canvas id="bg-canvas"></canvas>
+<div id="back-btn-container"></div>
 
 <div id="lock-screen" class="screen active">
     <div class="input-group">
         <h2>SECURITY CHECK</h2>
-        <input type="password" id="pass-input" placeholder="パスワードを入力">
+        <input type="password" id="pass-input" placeholder="PASS: 0132">
         <br>
-        <button class="main-btn" style="padding: 10px 40px;" onclick="checkPassword()">クリック</button>
-        <div id="error-msg"></div>
+        <div class="main-btn" style="margin: 0 auto;" onclick="checkPassword()">クリック</div>
+        <div id="error-msg" style="color: #ff4d4d; margin-top:15px;"></div>
     </div>
 </div>
 
 <div id="home-screen" class="screen">
     <div class="settings-icon" onclick="showScreen('settings-screen')">⚙️</div>
-    <div class="trivia-bar" id="trivia-text">読み込み中...</div>
-    <div class="menu-grid">
-        <div class="main-btn" onclick="showScreen('learn-menu-screen')">自己育成</div>
-        <div class="main-btn" onclick="showScreen('test-menu-screen')">確認テスト</div>
-    </div>
+    <h2 style="margin-top: 40px;">MENU</h2>
+    <div class="main-btn" onclick="showScreen('learn-menu-screen')">自己育成</div>
+    <div class="main-btn" onclick="showScreen('test-menu-screen')">確認テスト</div>
 </div>
 
 <div id="settings-screen" class="screen">
-    <div class="back-btn" onclick="goBack()">戻る</div>
     <h2>設定</h2>
     <div class="setting-item">
-        <span>背景色</span>
+        <span>テーマカラー</span>
         <select id="bg-select" onchange="updateSettings()">
             <option value="#1a1a1a">ダーク</option>
-            <option value="#001f3f">ネイビー</option>
-            <option value="#1a0033">パープル</option>
+            <option value="#001f3f">青（ネイビー）</option>
+            <option value="#00331a">緑（ディープ）</option>
+            <option value="#2d3300">黄緑（オリーブ）</option>
         </select>
     </div>
     <div class="setting-item">
-        <span>動作モード</span>
-        <select id="mode-select" onchange="updateSettings()">
-            <option value="normal">通常（泡あり）</option>
-            <option value="perf">パフォーマンス</option>
-        </select>
-    </div>
-    <div class="setting-item">
-        <span>解説モード</span>
+        <span>料理例え補足</span>
         <select id="guide-select" onchange="updateSettings()">
-            <option value="on">補足あり（料理例え）</option>
-            <option value="off">補足なし（専門的）</option>
+            <option value="on">あり</option>
+            <option value="off">なし</option>
         </select>
     </div>
 </div>
 
 <div id="learn-menu-screen" class="screen">
-    <div class="back-btn" onclick="goBack()">戻る</div>
     <h2>自己育成モード</h2>
-    <div class="menu-grid">
-        <div class="main-btn" onclick="showScreen('learn-soft-screen')">ソフトウェア</div>
-        <div class="main-btn" onclick="showScreen('learn-hard-screen')">ハードウェア</div>
-        <div class="main-btn" onclick="showScreen('learn-maker-screen')">メーカー</div>
-        <div class="main-btn" onclick="showScreen('learn-struct-screen')">構造</div>
-    </div>
-</div>
-
-<div id="learn-maker-screen" class="screen">
-    <div class="back-btn" onclick="goBack()">戻る</div>
-    <div class="nav-bar">
-        <div class="nav-item" onclick="document.getElementById('m-vaio').scrollIntoView({behavior:'smooth'})">VAIO</div>
-        <div class="nav-item" onclick="document.getElementById('m-dell').scrollIntoView({behavior:'smooth'})">DELL</div>
-        <div class="nav-item" onclick="document.getElementById('m-dyna').scrollIntoView({behavior:'smooth'})">Dynabook</div>
-        <div class="nav-item" onclick="document.getElementById('m-nec').scrollIntoView({behavior:'smooth'})">NEC</div>
-        <div class="nav-item" onclick="document.getElementById('m-fuji').scrollIntoView({behavior:'smooth'})">富士通</div>
-        <div class="nav-item" onclick="document.getElementById('m-leno').scrollIntoView({behavior:'smooth'})">Lenovo</div>
-    </div>
-    <div id="maker-content" style="width:100%">
-        <section id="m-vaio" class="content-section">
-            <h3>VAIO (バイオ)</h3>
-            <p><strong>【排熱と構造】</strong>VAIO TruePerformance技術により、CPUの限界性能を長時間維持。長野県安曇野市の自社工場での徹底的な冷却設計が強みです。</p>
-            <p class="guide-text" data-base="冷却へのこだわり。">補足：厨房でいう「超強力な換気扇」。コンロが熱くなりすぎないから、ずっと強火で料理し続けられるんだよ！</p>
-        </section>
-        </div>
+    <div class="main-btn" onclick="alert('準備中')">ソフトウェア</div>
+    <div class="main-btn" onclick="alert('準備中')">ハードウェア</div>
 </div>
 
 <div id="test-menu-screen" class="screen">
-    <div class="back-btn" onclick="goBack()">戻る</div>
-    <h2>難易度を選択</h2>
-    <div class="main-btn" style="margin:10px; width:80%" onclick="startTest('easy')">初歩 (販売員・選び方含む)</div>
-    <div class="main-btn" style="margin:10px; width:80%" onclick="startTest('normal')">基礎 (スペック・設定)</div>
-    <div class="main-btn" style="margin:10px; width:80%" onclick="startTest('hard')">標準 (エンジニア予備軍)</div>
+    <h2 style="margin-bottom: 30px;">確認テスト</h2>
+    <div class="main-btn" onclick="startTest('初歩')">初歩</div>
+    <div class="main-btn" onclick="startTest('基礎')">基礎</div>
+    <div class="main-btn" onclick="startTest('標準')">標準</div>
 </div>
 
 <div id="test-run-screen" class="screen">
-    <div class="test-info" id="test-progress">1 / 20</div>
-    <div id="quiz-area" class="quiz-container">
-        <h3 id="question-text">問題文がここに表示されます</h3>
+    <div class="test-info" id="test-progress">1 / 3</div>
+    <div style="width:100%; max-width:600px;">
+        <h3 id="question-text" style="min-height: 80px;">問題読み込み中...</h3>
         <div id="choices-area"></div>
     </div>
 </div>
 
 <div id="result-screen" class="screen">
-    <h2>テスト結果</h2>
-    <div id="result-score" style="font-size:1.5rem; margin-bottom:20px;"></div>
-    <div id="result-details" style="width:100%; max-width:800px; text-align:left;"></div>
-    <button class="main-btn" onclick="showScreen('home-screen')">ホームへ戻る</button>
+    <h2>RESULT</h2>
+    <div id="result-score" style="font-size:2rem; margin: 20px 0;"></div>
+    <div id="result-details" style="width:100%; max-width:600px; font-size: 0.9rem;"></div>
+    <div class="main-btn" onclick="showScreen('home-screen')">ホームへ</div>
 </div>
 
 <script>
-    // --- データ管理 ---
-    const trivias = [
-        "CPUは再起動するとメモリ内のゴミが掃除されて元気になります。",
-        "キーボードのFとJに突起があるのは、手元を見ずに打つための目印だよ。",
-        "1GB（ギガバイト）は、実は約10億バイトという膨大なデータの集まりです。",
-        "ノートPCのバッテリーは、0%や100%の状態を長く続けるより、50%前後が一番長持ちします。"
-    ];
-
-    // --- 背景泡アニメーション ---
-    const canvas = document.getElementById('bg-canvas');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-
-    function initCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-
-    class Bubble {
-        constructor() {
-            this.reset();
-        }
-        reset() {
-            this.x = Math.random() * canvas.width;
-            this.y = canvas.height + Math.random() * 100;
-            this.size = Math.random() * 15 + 2;
-            this.speed = Math.random() * 1 + 0.5;
-            this.opacity = Math.random() * 0.5;
-        }
-        update() {
-            this.y -= this.speed;
-            if (this.y < -50) this.reset();
-        }
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(77, 166, 255, ${this.opacity})`;
-            ctx.fill();
-        }
-    }
-
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        if (localStorage.getItem('mode') !== 'perf') {
-            particles.forEach(p => { p.update(); p.draw(); });
-        }
-        requestAnimationFrame(animate);
-    }
-
-    // --- システム基本機能 ---
     let screenHistory = ['lock-screen'];
-
-    function showScreen(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        screenHistory.push(id);
-    }
-
-    function goBack() {
-        if (localStorage.getItem('mode') !== 'perf') {
-            createRipple();
-        }
-        screenHistory.pop();
-        const prev = screenHistory[screenHistory.length - 1];
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(prev).classList.add('active');
-    }
-
-    function createRipple() {
-        const ripple = document.createElement('div');
-        ripple.className = 'ripple';
-        ripple.style.left = (window.innerWidth/2 - 50) + 'px';
-        ripple.style.top = (window.innerHeight/2 - 50) + 'px';
-        ripple.style.width = '100px';
-        ripple.style.height = '100px';
-        document.body.appendChild(ripple);
-        setTimeout(() => ripple.remove(), 600);
-    }
-
-    function checkPassword() {
-        const input = document.getElementById('pass-input').value;
-        if (input === '0132') {
-            showScreen('home-screen');
-            document.getElementById('trivia-text').innerText = "本日の豆知識: " + trivias[Math.floor(Math.random() * trivias.length)];
-        } else {
-            document.getElementById('error-msg').innerText = "パスワード間違っているよ！";
-        }
-    }
-
-    // --- テスト機能 ---
     let currentQuiz = [];
     let quizIndex = 0;
     let score = 0;
     let wrongAnswers = [];
 
-    function startTest(difficulty) {
-        // 本来は難易度ごとにDBから取得
-        // デモ用サンプル問題
-        currentQuiz = [
-            { q: "メモリ8GBと16GB、どちらが一度にたくさんのアプリを開けますか？", a: ["16GB", "8GB", "変わらない"], ok: 0, exp: "まな板（メモリ）が広いほど、たくさんの料理（アプリ）を同時に作れるんだよ！" },
-            { q: "Intel CPUの『Pコア』とは何の略？", a: ["Performance", "Power", "Private"], ok: 0, exp: "性能重視のベテランシェフ（Performance）のことだね。" },
-            { q: "JEITA規格とは主に何に関する測定基準？", a: ["バッテリー駆動時間", "画面の明るさ", "キーボードの重さ"], ok: 0, exp: "業界共通の物差し（基準）で、正確に比較するためのものだよ。" }
-            // ここに360問分のデータが入ります
-        ];
-        quizIndex = 0; score = 0; wrongAnswers = [];
-        showScreen('test-run-screen');
-        nextQuestion();
-    }
-
-    function nextQuestion() {
-        if (quizIndex >= 3) { // デモなので3問で終了
-            finishTest();
-            return;
-        }
-        document.getElementById('test-progress').innerText = `${quizIndex + 1} / 20`;
-        const q = currentQuiz[quizIndex];
-        document.getElementById('question-text').innerText = q.q;
-        const choicesArea = document.getElementById('choices-area');
-        choicesArea.innerHTML = '';
-        q.a.forEach((choice, i) => {
-            const btn = document.createElement('div');
-            btn.className = 'choice-btn';
-            btn.innerText = choice;
-            btn.onclick = () => selectChoice(i);
-            choicesArea.appendChild(btn);
-        });
-    }
-
-    function selectChoice(idx) {
-        if (idx === currentQuiz[quizIndex].ok) {
-            score++;
-        } else {
-            wrongAnswers.push({ q: currentQuiz[quizIndex].q, correct: currentQuiz[quizIndex].a[currentQuiz[quizIndex].ok], exp: currentQuiz[quizIndex].exp });
-        }
-        quizIndex++;
-        nextQuestion();
-    }
-
-    function finishTest() {
-        showScreen('result-screen');
-        document.getElementById('result-score').innerText = `正解数: ${score} / 20`;
-        const details = document.getElementById('result-details');
-        details.innerHTML = '<h3>間違えたところの解説:</h3>';
-        wrongAnswers.forEach(item => {
-            details.innerHTML += `<div style="margin-bottom:15px; border-left:4px solid #ff4d4d; padding-left:10px;">
-                <strong>問: ${item.q}</strong><br>
-                正解: ${item.correct}<br>
-                解説: ${localStorage.getItem('guide') === 'off' ? '（専門的）内部構造に基づいた正解です。' : item.exp}
-            </div>`;
-        });
-    }
-
-    // --- 設定保存 ---
+    // --- 背景色と設定の保存 ---
     function updateSettings() {
-        localStorage.setItem('bgColor', document.getElementById('bg-select').value);
-        localStorage.setItem('mode', document.getElementById('mode-select').value);
-        localStorage.setItem('guide', document.getElementById('guide-select').value);
+        const bg = document.getElementById('bg-select').value;
+        const guide = document.getElementById('guide-select').value;
+        localStorage.setItem('bgColor', bg);
+        localStorage.setItem('guide', guide);
         applySettings();
     }
 
     function applySettings() {
         const bg = localStorage.getItem('bgColor') || '#1a1a1a';
         document.body.style.backgroundColor = bg;
-        document.querySelectorAll('.screen').forEach(s => s.style.backgroundColor = bg);
+        document.querySelectorAll('.screen').forEach(s => {
+            if(s.id !== 'lock-screen') s.style.backgroundColor = bg;
+        });
+        // アクセントカラーの微調整（黄緑の時は文字を見やすく）
+        if(bg === '#2d3300') document.documentElement.style.setProperty('--accent-color', '#d4ff00');
+        else document.documentElement.style.setProperty('--accent-color', '#4da6ff');
+    }
+
+    // --- 画面遷移管理 ---
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        const target = document.getElementById(id);
+        target.classList.add('active');
         
-        const guide = localStorage.getItem('guide') || 'on';
-        document.querySelectorAll('.guide-text').forEach(t => {
-            t.style.display = (guide === 'on') ? 'block' : 'none';
+        if (id !== 'lock-screen') {
+            screenHistory.push(id);
+            renderBackButton();
+        } else {
+            screenHistory = ['lock-screen'];
+            renderBackButton();
+        }
+    }
+
+    function goBack() {
+        if (screenHistory.length <= 1) return;
+        screenHistory.pop();
+        const prev = screenHistory[screenHistory.length - 1];
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(prev).classList.add('active');
+        renderBackButton();
+    }
+
+    function renderBackButton() {
+        const container = document.getElementById('back-btn-container');
+        const current = screenHistory[screenHistory.length - 1];
+        if (current !== 'lock-screen' && current !== 'home-screen') {
+            container.innerHTML = `<div class="top-back-btn" onclick="goBack()">◀ 戻る</div>`;
+        } else {
+            container.innerHTML = '';
+        }
+    }
+
+    function checkPassword() {
+        if (document.getElementById('pass-input').value === '0132') showScreen('home-screen');
+        else document.getElementById('error-msg').innerText = "パスワードが違います";
+    }
+
+    // --- テストロジック ---
+    const quizData = {
+        '初歩': [
+            { q: "マウスの右クリックの主な役割は？", a: ["決定", "メニュー表示", "削除"], ok: 1, exp: "料理でいう『味見』や『調味料の確認』。次に何をするか選ぶためのボタンだよ。" },
+            { q: "メモリ8GBと16GB、どっちが動作が快適？", a: ["8GB", "16GB", "どちらも同じ"], ok: 1, exp: "まな板が広い（16GB）ほうが、たくさんの具材を並べて手際よく料理できるんだ。" },
+            { q: "PCを使い終わった時の正しい動作は？", a: ["電源ボタン長押し", "コンセントを抜く", "シャットダウン"], ok: 2, exp: "厨房の火をしっかり消して、後片付けをしてから帰るのが基本だね。" }
+        ],
+        '基礎': [
+            { q: "Intel Core i7とi5、一般的に性能が高いのは？", a: ["i5", "i7", "数字は関係ない"], ok: 1, exp: "i7はベテランシェフ。i5より手際が良くて、難しい料理もこなせるよ。" },
+            { q: "SSDとHDD、読み込み速度が速いのは？", a: ["SSD", "HDD", "どちらも同じ"], ok: 0, exp: "SSDは自動ドア付きの冷蔵庫。HDDは鍵付きの重い箱。取り出し速度が全然違うよ。" },
+            { q: "Officeが入っていないPCでExcelを使いたい時は？", a: ["諦める", "Web版や無料互換ソフトを使う", "PCを買い替える"], ok: 1, exp: "自分の包丁がなくても、共有キッチンの道具を借りるイメージだね。" }
+        ],
+        '標準': [
+            { q: "CPUの『TDP』は何を表す数値？", a: ["最大処理速度", "消費電力の目安/発熱量", "メモリ容量"], ok: 1, exp: "コンロの火力の強さ。火力が強いほど、すごい冷却装置（換気扇）が必要になるよ。" },
+            { q: "BIOS/UEFIの役割は？", a: ["文書作成", "OS起動前の基本設定", "ウイルス駆除"], ok: 1, exp: "お店を開ける前の、ガスや水道の元栓チェックみたいなものだね。" },
+            { q: "NPU（AIプロセッサ）が得意な処理は？", a: ["文字入力", "AI画像生成などの推論演算", "ネット検索"], ok: 1, exp: "特定の料理（AI）だけをめちゃくちゃ速く作る専門の自動調理マシンのことだよ。" }
+        ]
+    };
+
+    function startTest(type) {
+        currentQuiz = quizData[type];
+        quizIndex = 0; score = 0; wrongAnswers = [];
+        showScreen('test-run-screen');
+        nextQuestion();
+    }
+
+    function nextQuestion() {
+        if (quizIndex >= 3) { finishTest(); return; }
+        document.getElementById('test-progress').innerText = `${quizIndex + 1} / 3`;
+        const q = currentQuiz[quizIndex];
+        document.getElementById('question-text').innerText = q.q;
+        const area = document.getElementById('choices-area');
+        area.innerHTML = '';
+        q.a.forEach((choice, i) => {
+            const btn = document.createElement('div');
+            btn.className = 'choice-btn';
+            btn.innerText = choice;
+            btn.onclick = () => {
+                if(i === q.ok) score++;
+                else wrongAnswers.push({q: q.q, ok: q.a[q.ok], exp: q.exp});
+                quizIndex++;
+                nextQuestion();
+            };
+            area.appendChild(btn);
         });
     }
 
-    // 初期化
-    window.onload = () => {
-        initCanvas();
-        for (let i = 0; i < 30; i++) particles.push(new Bubble());
-        animate();
-        applySettings();
-        // セレクトボックスの値を復元
+    function finishTest() {
+        showScreen('result-screen');
+        document.getElementById('result-score').innerText = `正解: ${score} / 3`;
+        const details = document.getElementById('result-details');
+        details.innerHTML = wrongAnswers.length > 0 ? '<h3>解説</h3>' : '<h3>パーフェクト！</h3>';
+        wrongAnswers.forEach(w => {
+            details.innerHTML += `<div style="background:rgba(255,255,255,0.05); padding:10px; margin:5px 0; border-left:3px solid var(--accent-color);">
+                <strong>${w.q}</strong><br>正解: ${w.ok}<br>
+                <span style="color:#aaa; font-size:0.8rem;">${localStorage.getItem('guide') === 'on' ? w.exp : ''}</span>
+            </div>`;
+        });
+    }
+
+    // --- 泡アニメーション ---
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let bubbles = [];
+    function init() { 
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        bubbles = [];
+        for(let i=0; i<25; i++) bubbles.push({
+            x: Math.random()*canvas.width, y: canvas.height+Math.random()*100,
+            r: Math.random()*10+2, s: Math.random()*1+0.5, o: Math.random()*0.4
+        });
+    }
+    function draw() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        bubbles.forEach(b => {
+            b.y -= b.s; if(b.y < -20) b.y = canvas.height+20;
+            ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
+            ctx.fillStyle = `rgba(150,200,255,${b.o})`; ctx.fill();
+        });
+        requestAnimationFrame(draw);
+    }
+
+    window.onload = () => { init(); draw(); applySettings();
         if(localStorage.getItem('bgColor')) document.getElementById('bg-select').value = localStorage.getItem('bgColor');
-        if(localStorage.getItem('mode')) document.getElementById('mode-select').value = localStorage.getItem('mode');
         if(localStorage.getItem('guide')) document.getElementById('guide-select').value = localStorage.getItem('guide');
     };
-    window.onresize = initCanvas;
-
+    window.onresize = init;
 </script>
 </body>
 </html>
