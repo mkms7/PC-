@@ -116,30 +116,30 @@
     </div>
 
 <script>
-   const SECRET_PW = "0132";
-function checkPassword() {
-    // 1. documnt -> document に修正したはず要確認
-    // 2. pass-input -> pw-input に修正
-    const inputElement = document.getElementById('pw-input');
-    
-    if (!inputElement) return; // 要素が見つからない場合の安全策
+ // パスワードを 132 に変更
+    const SECRET_PW = "132";
 
-    let input = inputElement.value;
-    
-    // 全角数字を半角に変換する処理
-    input = input.replace(/[０-９]/g, function(s) {
-        return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
-    });
-    
-    input = input.trim();
+    function checkPassword() {
+        // 命令のスペルミス（documnt → document）とID名の不一致を修正
+        const inputElement = document.getElementById('pw-input');
+        if (!inputElement) return;
 
-    // SECRET_PW (0132) と照合
-    if (input === SECRET_PW) {
-        showScreen('main-screen');
-    } else {
-        alert("パスワードが違います。");
+        let input = inputElement.value;
+        
+        // 全角数字を半角に変換する処理
+        input = input.replace(/[０-９]/g, function(s) {
+            return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+        });
+        
+        input = input.trim();
+
+        // 新しいパスワード 132 と照合
+        if (input === SECRET_PW) {
+            showScreen('main-screen');
+        } else {
+            alert("パスワードが違います。");
+        }
     }
-}
     
     function showScreen(id) {
     
@@ -1755,6 +1755,7 @@ function checkPassword() {
 </script>
 </body>
 </html>
+
 
 
 
